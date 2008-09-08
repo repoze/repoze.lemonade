@@ -2,6 +2,7 @@ from zope.interface import implements
 
 from repoze.lemonade.interfaces import IObjectAddedEvent
 from repoze.lemonade.interfaces import IObjectRemovedEvent
+from repoze.lemonade.interfaces import IObjectAboutToBeRemovedEvent
 from repoze.lemonade.interfaces import IObjectModifiedEvent
 
 class ObjectAddedEvent(object):
@@ -13,6 +14,13 @@ class ObjectAddedEvent(object):
 
 class ObjectRemovedEvent(object):
     implements(IObjectRemovedEvent)
+    def __init__(self, object, parent, name):
+        self.object = object
+        self.parent = parent
+        self.name = name
+
+class ObjectAboutToBeRemovedEvent(object):
+    implements(IObjectAboutToBeRemovedEvent)
     def __init__(self, object, parent, name):
         self.object = object
         self.parent = parent

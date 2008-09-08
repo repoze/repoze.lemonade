@@ -7,6 +7,7 @@ from persistent import Persistent
 from repoze.lemonade.interfaces import IFolder
 from repoze.lemonade.events import ObjectAddedEvent
 from repoze.lemonade.events import ObjectRemovedEvent
+from repoze.lemonade.events import ObjectAboutToBeRemovedEvent
 
 from BTrees.OOBTree import OOBTree
 
@@ -88,6 +89,7 @@ class Folder(Persistent):
         """Delete the named object from the folder. Raises a KeyError
            if the object is not found."""
         other = self.data[name]
+        dispatch(ObjectAboutToBeRemovedEvent(other, self, name))
         if hasattr(other, '__parent__'):
             del other.__parent__
         if hasattr(other, '__name__'):

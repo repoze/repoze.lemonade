@@ -9,6 +9,9 @@ class IObjectModifiedEvent(IObjectEvent):
 class IObjectAddedEvent(IObjectEvent):
     """ An event type sent when an object is added """
 
+class IObjectAboutToBeRemovedEvent(IObjectEvent):
+    """ An event type sent before an object is removed """
+
 class IObjectRemovedEvent(IObjectEvent):
     """ An event type sent when an object is removed """
     
