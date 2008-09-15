@@ -48,8 +48,8 @@ setup(name='repoze.lemonade',
       include_package_data=True,
       namespace_packages=['repoze', 'repoze.lemonade'],
       zip_safe=False,
-      tests_require = ['repoze.bfg', 'ZODB3'],
-      install_requires=['setuptools', 'repoze.bfg', 'ZODB3'],
+      tests_require = ['ZODB3'],
+      install_requires=['setuptools', 'ZODB3'],
       test_suite="repoze.lemonade",
       entry_points = """\
       """
