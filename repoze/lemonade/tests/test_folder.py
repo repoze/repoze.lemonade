@@ -1,15 +1,12 @@
 import unittest
+from zope.component.testing import PlacelessSetup
 
-class FolderTests(unittest.TestCase):
+class FolderTests(unittest.TestCase, PlacelessSetup):
     def setUp(self):
-        self._cleanup()
+        PlacelessSetup.setUp(self)
 
     def tearDown(self):
-        self._cleanup()
-
-    def _cleanup(self):
-        from zope.testing.cleanup import cleanUp
-        cleanUp()
+        PlacelessSetup.tearDown(self)
 
     def _getTargetClass(self):
         from repoze.lemonade.folder import Folder
@@ -75,6 +72,7 @@ class FolderTests(unittest.TestCase):
     def test___setitem__exists(self):
         from repoze.lemonade.interfaces import IObjectEvent
         from repoze.lemonade.interfaces import IObjectRemovedEvent
+        from repoze.lemonade.interfaces import IObjectAboutToBeRemovedEvent
         from repoze.lemonade.interfaces import IObjectAddedEvent
         events = []
         def listener(event):
@@ -86,19 +84,24 @@ class FolderTests(unittest.TestCase):
         dummy2 = DummyModel()
         folder = self._makeOne({'a':dummy1})
         folder.__setitem__('a', dummy2)
-        self.assertEqual(len(events), 2)
-        self.failUnless(IObjectRemovedEvent.providedBy(events[0]))
-        self.failUnless(IObjectAddedEvent.providedBy(events[1]))
+        self.assertEqual(len(events), 3)
+        self.failUnless(IObjectAboutToBeRemovedEvent.providedBy(events[0]))
+        self.failUnless(IObjectRemovedEvent.providedBy(events[1]))
+        self.failUnless(IObjectAddedEvent.providedBy(events[2]))
         self.assertEqual(events[0].object, dummy1)
         self.assertEqual(events[0].parent, folder)
         self.assertEqual(events[0].name, 'a')
-        self.assertEqual(events[1].object, dummy2)
+        self.assertEqual(events[1].object, dummy1)
         self.assertEqual(events[1].parent, folder)
         self.assertEqual(events[1].name, 'a')
+        self.assertEqual(events[2].object, dummy2)
+        self.assertEqual(events[2].parent, folder)
+        self.assertEqual(events[2].name, 'a')
 
     def test___delitem__(self):
         from repoze.lemonade.interfaces import IObjectEvent
         from repoze.lemonade.interfaces import IObjectRemovedEvent
+        from repoze.lemonade.interfaces import IObjectAboutToBeRemovedEvent
         events = []
         def listener(event):
             events.append(event)
@@ -108,11 +111,15 @@ class FolderTests(unittest.TestCase):
         dummy.__name__ = None
         folder = self._makeOne({'a':dummy})
         del folder['a']
-        self.assertEqual(len(events), 1)
-        self.failUnless(IObjectRemovedEvent.providedBy(events[0]))
+        self.assertEqual(len(events), 2)
+        self.failUnless(IObjectAboutToBeRemovedEvent.providedBy(events[0]))
+        self.failUnless(IObjectRemovedEvent.providedBy(events[1]))
         self.assertEqual(events[0].object, dummy)
         self.assertEqual(events[0].parent, folder)
         self.assertEqual(events[0].name, 'a')
+        self.assertEqual(events[1].object, dummy)
+        self.assertEqual(events[1].parent, folder)
+        self.assertEqual(events[1].name, 'a')
         self.failIf(hasattr(dummy, '__parent__'))
         self.failIf(hasattr(dummy, '__name__'))
 

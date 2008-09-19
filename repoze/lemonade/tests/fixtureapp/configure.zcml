@@ -1,0 +1,12 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+    xmlns:lemonade="http://namespaces.repoze.org/lemonade"
+	           i18n_domain="repoze.lemonade">
+
+  <include package="repoze.lemonade.includes" file="meta.zcml"/>
+
+  <lemonade:content
+      factory=".content.Foo"
+      type=".content.IFoo"
+      />
+
+</configure>

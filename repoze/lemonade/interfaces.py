@@ -1,4 +1,5 @@
 from zope.interface import Interface
+from zope.interface.interfaces import IInterface
 
 class IObjectEvent(Interface):
     """ An event involving a persistent object """
@@ -14,7 +15,15 @@ class IObjectAboutToBeRemovedEvent(IObjectEvent):
 
 class IObjectRemovedEvent(IObjectEvent):
     """ An event type sent when an object is removed """
+
+class IContentFactory(Interface):
+    """ Content factory """
+    def __call__(**kw):
+        """ Return a content instance  """
     
+class IContent(IInterface):
+    """ Content """
+
 class IFolder(Interface):
     """ Folder """
 

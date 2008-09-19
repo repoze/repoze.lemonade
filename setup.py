@@ -25,6 +25,16 @@ here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.txt')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
+requires = [
+    'setuptools',
+    'ZODB3',
+    'zope.component',
+    'zope.interface',
+    'zope.configuration',
+    'zope.schema',
+    'zope.security',
+    ]
+
 setup(name='repoze.lemonade',
       version=__version__,
       description=('ZODB-based data structures and utilities for use under a '
@@ -48,8 +58,8 @@ setup(name='repoze.lemonade',
       include_package_data=True,
       namespace_packages=['repoze', 'repoze.lemonade'],
       zip_safe=False,
-      tests_require = ['ZODB3'],
-      install_requires=['setuptools', 'ZODB3'],
+      tests_require = requires,
+      install_requires = requires,
       test_suite="repoze.lemonade",
       entry_points = """\
       """
