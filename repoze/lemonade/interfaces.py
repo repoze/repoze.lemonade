@@ -18,7 +18,7 @@ class IObjectRemovedEvent(IObjectEvent):
 
 class IContentFactory(Interface):
     """ Content factory """
-    def __call__(**kw):
+    def __call__(*arg, **kw):
         """ Return a content instance  """
     
 class IContent(IInterface):
