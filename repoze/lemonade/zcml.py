@@ -6,7 +6,7 @@ from zope.configuration.fields import GlobalObject
 from zope.configuration.fields import GlobalInterface
 from zope.component.zcml import handler
 
-from repoze.lemonade.interfaces import IContent
+from repoze.lemonade.interfaces import IContentType
 from repoze.lemonade.interfaces import IContentFactory
 
 class HammerFactoryFactory(object):
@@ -28,9 +28,9 @@ class IContentDirective(Interface):
 
 def content(_context, factory, type):
     _context.action(
-        discriminator = ('content', type, IContent),
+        discriminator = ('content', type, IContentType),
         callable = provideInterface,
-        args = ('', type, IContent)
+        args = ('', type, IContentType)
         )
 
     hammer = HammerFactoryFactory(factory)

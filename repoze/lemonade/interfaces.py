@@ -21,7 +21,7 @@ class IContentFactory(Interface):
     def __call__(*arg, **kw):
         """ Return a content instance  """
     
-class IContent(IInterface):
+class IContentType(IInterface):
     """ Content """
 
 class IFolder(Interface):

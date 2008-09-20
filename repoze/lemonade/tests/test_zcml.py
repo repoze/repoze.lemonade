@@ -18,7 +18,7 @@ class TestContentDirective(unittest.TestCase, PlacelessSetup):
                 self.kw = kw
 
         from zope.interface import Interface
-        from repoze.lemonade.interfaces import IContent
+        from repoze.lemonade.interfaces import IContentType
         from repoze.lemonade.interfaces import IContentFactory
 
         class IFoo(Interface):
@@ -33,9 +33,10 @@ class TestContentDirective(unittest.TestCase, PlacelessSetup):
 
         self.assertEqual(len(context.actions), 2)
         provide = context.actions[0]
-        self.assertEqual(provide['discriminator'], ('content', IFoo, IContent))
+        self.assertEqual(provide['discriminator'],
+                         ('content', IFoo, IContentType))
         self.assertEqual(provide['callable'], provideInterface)
-        self.assertEqual(provide['args'], ('', IFoo, IContent))
+        self.assertEqual(provide['args'], ('', IFoo, IContentType))
 
         register = context.actions[1]
         self.assertEqual(register['discriminator'],

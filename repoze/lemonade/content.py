@@ -4,7 +4,7 @@ from zope.interface import directlyProvides
 
 from repoze.lemonade.interfaces import IContentFactory
 
-class dummy:
+class provides:
     def __init__(self, iface):
         directlyProvides(self, iface)
 
@@ -13,7 +13,7 @@ def create_content(iface, *arg, **kw):
     by calling its factory, passing ``*arg`` and ``**kw`` to the factory.
     Raise a ComponentLookupError  if there is no content type related to 
     ``iface`` """
-    factory = getAdapter(dummy(iface), IContentFactory)
+    factory = getAdapter(provides(iface), IContentFactory)
     return factory(*arg, **kw)
 
 def get_content_types():
