@@ -127,4 +127,6 @@ The state machine is now ready to use::
   >>> ob.review_state
   'pending'
 
+The state machine object itself is persistent, and can be attached to
+any other persistent object as a result.
 
