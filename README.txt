@@ -86,3 +86,46 @@ hold of the content interface via:
 
    IMyContentType.getTaggedValue('name')
 
+State Machine
+-------------
+
+:mod:`repoze.lemonade` has a very simple persistent state machine
+implementation that can be used for workflow-like state transitions.
+To use the state machine, import it within your code and initialize it
+with a state attr, an initial state, and add state map declarations
+that include transition functions::
+
+  >>> from repoze.lemonade.statemachine import StateMachine
+  >>> sm = StateMachine('review_state', 'pending') # attr name, initial state
+  >>> def transition(from_state, to_state, action, ob):
+  >>>     print to_state
+  >>> sm.add('pending', 'publish', 'published', do)
+  >>> sm.add('pending', 'reject', 'private', do)
+  >>> sm.add('published', 'retract', 'pending', do)
+  >>> sm.add('private', 'submit', 'pending', do)
+
+
+The state machine is now ready to use::
+
+  >>> class ReviewedObject:
+  >>>     pass
+  >>> ob = ReviewedObject()
+  >>> sm.actions(ob, from_state='pending')
+  ['publish', 'reject']
+  >>> sm.actions(ob)  # from_state defaults to current or initial state
+  ['publish', 'reject']
+  >>> ob.review_state = 'published'
+  >>> sm.actions(ob)
+  ['retract']
+  >>> sm.actions(ob, from_state='private')
+  ['submit']
+  >>> sm.execute(ob, 'publish')
+  'publish'
+  >>> ob.review_state
+  'published'
+  >>> sm.execute(ob, 'retract')
+  'retract'
+  >>> ob.review_state
+  'pending'
+
+
