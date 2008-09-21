@@ -126,6 +126,8 @@ The state machine is now ready to use::
   'retract'
   >>> ob.review_state
   'pending'
+  >>> sm.state_of(ob) # alternate mechanism (always works)
+  'pending'
 
 The state machine object itself is persistent, and can be attached to
 any other persistent object as a result.

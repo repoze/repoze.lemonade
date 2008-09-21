@@ -55,9 +55,13 @@ class StateMachine(Persistent):
         transition_fn(state, newstate, action, context)
         setattr(context, self.state_attr, newstate)
 
+    def state_of(self, context):
+        state = getattr(context, self.state_attr, self.initial_state)
+        return state
+
     def actions(self, context, from_state=None):
         if from_state is None:
-            from_state = getattr(context, self.state_attr, self.initial_state)
+            from_state = self.state_of(context)
         actions = []
         for (state, action) in self.states.keys():
             if state == from_state:
