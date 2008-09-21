@@ -98,12 +98,11 @@ that include transition functions::
   >>> from repoze.lemonade.statemachine import StateMachine
   >>> sm = StateMachine('review_state', 'pending') # attr name, initial state
   >>> def transition(from_state, to_state, action, ob):
-  >>>     print to_state
-  >>> sm.add('pending', 'publish', 'published', do)
-  >>> sm.add('pending', 'reject', 'private', do)
-  >>> sm.add('published', 'retract', 'pending', do)
-  >>> sm.add('private', 'submit', 'pending', do)
-
+  >>>     print action
+  >>> sm.add('pending', 'publish', 'published', transition)
+  >>> sm.add('pending', 'reject', 'private', transition)
+  >>> sm.add('published', 'retract', 'pending', transition)
+  >>> sm.add('private', 'submit', 'pending', transition)
 
 The state machine is now ready to use::
 
