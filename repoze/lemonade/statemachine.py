@@ -11,18 +11,17 @@ class StateMachineError(Exception):
     """ Invalid input to finite state machine"""
 
 class StateMachine(Persistent):
-    """ Persistent finite state machine, meant to be attached to a
-    content object, featuring transition actions.
+    """ Persistent finite state machine featuring transition actions.
 
-    The class stores a dictionary of (state, input) keys,
-    and (state, action) values.
+    The class stores a dictionary of (state, action) keys,
+    and (state, transition) values.
 
-    When a (state, input) search is performed:
+    When a (state, action) search is performed:
     * an exact match is checked first,
     * (state, None) is checked next.
 
     The action is of the following form:
-    * function(current_state, input, context)
+    * function(current_state, new_state, action, context)
     """
 
     def __init__(self, state_attr, initial_state=None):

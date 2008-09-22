@@ -19,7 +19,8 @@ class FolderTests(unittest.TestCase, PlacelessSetup):
     def _registerEventListener(self, listener, iface):
         import zope.component
         gsm = zope.component.getGlobalSiteManager()
-        gsm.registerHandler(listener, (iface,))
+        from zope.interface import Interface
+        gsm.registerHandler(listener, (Interface, iface,))
 
     def test_keys(self):
         folder = self._makeOne({'a':1, 'b':2})
@@ -55,27 +56,33 @@ class FolderTests(unittest.TestCase, PlacelessSetup):
 
     def test___setitem__(self):
         from repoze.lemonade.interfaces import IObjectEvent
+        from repoze.lemonade.interfaces import IObjectWillBeAddedEvent
         from repoze.lemonade.interfaces import IObjectAddedEvent
         events = []
-        def listener(event):
+        def listener(object, event):
             events.append(event)
         self._registerEventListener(listener, IObjectEvent)
         dummy = DummyModel()
         folder = self._makeOne()
         folder['a'] = dummy
-        self.assertEqual(len(events), 1)
-        self.failUnless(IObjectAddedEvent.providedBy(events[0]))
+        self.assertEqual(len(events), 2)
+        self.failUnless(IObjectWillBeAddedEvent.providedBy(events[0]))
         self.assertEqual(events[0].object, dummy)
         self.assertEqual(events[0].parent, folder)
         self.assertEqual(events[0].name, 'a')
+        self.failUnless(IObjectAddedEvent.providedBy(events[1]))
+        self.assertEqual(events[1].object, dummy)
+        self.assertEqual(events[1].parent, folder)
+        self.assertEqual(events[1].name, 'a')
 
     def test___setitem__exists(self):
         from repoze.lemonade.interfaces import IObjectEvent
         from repoze.lemonade.interfaces import IObjectRemovedEvent
-        from repoze.lemonade.interfaces import IObjectAboutToBeRemovedEvent
+        from repoze.lemonade.interfaces import IObjectWillBeRemovedEvent
         from repoze.lemonade.interfaces import IObjectAddedEvent
+        from repoze.lemonade.interfaces import IObjectWillBeAddedEvent
         events = []
-        def listener(event):
+        def listener(object, event):
             events.append(event)
         self._registerEventListener(listener, IObjectEvent)
         dummy1 = DummyModel()
@@ -84,26 +91,26 @@ class FolderTests(unittest.TestCase, PlacelessSetup):
         dummy2 = DummyModel()
         folder = self._makeOne({'a':dummy1})
         folder.__setitem__('a', dummy2)
-        self.assertEqual(len(events), 3)
-        self.failUnless(IObjectAboutToBeRemovedEvent.providedBy(events[0]))
+        self.assertEqual(len(events), 4)
+        self.failUnless(IObjectWillBeRemovedEvent.providedBy(events[0]))
         self.failUnless(IObjectRemovedEvent.providedBy(events[1]))
-        self.failUnless(IObjectAddedEvent.providedBy(events[2]))
-        self.assertEqual(events[0].object, dummy1)
-        self.assertEqual(events[0].parent, folder)
-        self.assertEqual(events[0].name, 'a')
-        self.assertEqual(events[1].object, dummy1)
-        self.assertEqual(events[1].parent, folder)
-        self.assertEqual(events[1].name, 'a')
-        self.assertEqual(events[2].object, dummy2)
-        self.assertEqual(events[2].parent, folder)
-        self.assertEqual(events[2].name, 'a')
+        self.failUnless(IObjectWillBeAddedEvent.providedBy(events[2]))
+        self.failUnless(IObjectAddedEvent.providedBy(events[3]))
+        for event in events[0:2]:
+            self.assertEqual(event.object, dummy1)
+            self.assertEqual(event.parent, folder)
+            self.assertEqual(event.name, 'a')
+        for event in events[2:4]:
+            self.assertEqual(event.object, dummy2)
+            self.assertEqual(event.parent, folder)
+            self.assertEqual(event.name, 'a')
 
     def test___delitem__(self):
         from repoze.lemonade.interfaces import IObjectEvent
         from repoze.lemonade.interfaces import IObjectRemovedEvent
-        from repoze.lemonade.interfaces import IObjectAboutToBeRemovedEvent
+        from repoze.lemonade.interfaces import IObjectWillBeRemovedEvent
         events = []
-        def listener(event):
+        def listener(object, event):
             events.append(event)
         self._registerEventListener(listener, IObjectEvent)
         dummy = DummyModel()
@@ -112,7 +119,7 @@ class FolderTests(unittest.TestCase, PlacelessSetup):
         folder = self._makeOne({'a':dummy})
         del folder['a']
         self.assertEqual(len(events), 2)
-        self.failUnless(IObjectAboutToBeRemovedEvent.providedBy(events[0]))
+        self.failUnless(IObjectWillBeRemovedEvent.providedBy(events[0]))
         self.failUnless(IObjectRemovedEvent.providedBy(events[1]))
         self.assertEqual(events[0].object, dummy)
         self.assertEqual(events[0].parent, folder)

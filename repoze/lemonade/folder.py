@@ -1,13 +1,14 @@
 from zope.interface import implements
 
-from zope.component.event import dispatch
+from zope.component.event import objectEventNotify
 
 from persistent import Persistent
 
 from repoze.lemonade.interfaces import IFolder
 from repoze.lemonade.events import ObjectAddedEvent
+from repoze.lemonade.events import ObjectWillBeAddedEvent
 from repoze.lemonade.events import ObjectRemovedEvent
-from repoze.lemonade.events import ObjectAboutToBeRemovedEvent
+from repoze.lemonade.events import ObjectWillBeRemovedEvent
 
 from BTrees.OOBTree import OOBTree
 
@@ -80,20 +81,21 @@ class Folder(Persistent):
         if name in self.data:
             del self[name]
 
+        objectEventNotify(ObjectWillBeAddedEvent(other, self, name))
         other.__parent__ = self
         other.__name__ = name
         self.data[name] = other
-        dispatch(ObjectAddedEvent(other, self, name))
+        objectEventNotify(ObjectAddedEvent(other, self, name))
 
     def __delitem__(self, name):
         """Delete the named object from the folder. Raises a KeyError
            if the object is not found."""
         other = self.data[name]
-        dispatch(ObjectAboutToBeRemovedEvent(other, self, name))
+        objectEventNotify(ObjectWillBeRemovedEvent(other, self, name))
         if hasattr(other, '__parent__'):
             del other.__parent__
         if hasattr(other, '__name__'):
             del other.__name__
         del self.data[name]
-        dispatch(ObjectRemovedEvent(other, self, name))
+        objectEventNotify(ObjectRemovedEvent(other, self, name))
         
