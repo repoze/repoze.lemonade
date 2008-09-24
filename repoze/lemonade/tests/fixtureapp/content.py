@@ -8,3 +8,12 @@ class Foo:
 class IFoo(Interface):
     pass
 
+class Bar:
+    def __init__(self, *arg, **kw):
+        self.arg = arg
+        self.kw = kw
+
+class IBar(Interface):
+    pass
+    
+    

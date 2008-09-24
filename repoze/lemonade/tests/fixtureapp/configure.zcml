@@ -9,4 +9,9 @@
       type=".content.IFoo"
       />
 
+  <lemonade:content
+      factory=".content.Bar"
+      type=".content.IBar"
+      />
+
 </configure>

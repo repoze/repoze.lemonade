@@ -49,14 +49,14 @@ class TestContentDirective(unittest.TestCase, PlacelessSetup):
         self.assertEqual(register['args'][4], '')
         self.assertEqual(register['args'][5], context.info)
 
-class TestContent(unittest.TestCase, PlacelessSetup):
+class TestPickling(unittest.TestCase, PlacelessSetup):
     def setUp(self):
         PlacelessSetup.setUp(self)
 
     def tearDown(self):
         PlacelessSetup.tearDown(self)
 
-    def get_context(self):
+    def test_registry_actions_can_be_pickled_and_unpickled(self):
         import repoze.lemonade.tests.fixtureapp as package
         from zope.configuration import xmlconfig
         from zope.configuration import config
@@ -65,42 +65,11 @@ class TestContent(unittest.TestCase, PlacelessSetup):
         context.package = package
         xmlconfig.include(context, 'configure.zcml', package)
         context.execute_actions(clear=False)
-        return context
-
-    def test_registry_actions_can_be_pickled_and_unpickled(self):
-        context = self.get_context()
         actions = context.actions
         import cPickle
         dumped = cPickle.dumps(actions, -1)
         new = cPickle.loads(dumped)
         self.assertEqual(len(actions), len(new))
-
-    def test_create_content(self):
-        from repoze.lemonade.tests.fixtureapp import content
-        context = self.get_context()
-        from repoze.lemonade.content import create_content
-        ob = create_content(content.IFoo, 'arg1', kw1='kw1', kw2='kw2')
-        self.failUnless(isinstance(ob, content.Foo))
-        self.assertEqual(ob.arg, ('arg1',))
-        self.assertEqual(ob.kw, {'kw1':'kw1', 'kw2':'kw2'})
-
-    def test_fail_create_content(self):
-        context = self.get_context()
-        from repoze.lemonade.content import create_content
-        from zope.interface import Interface
-        class IBar(Interface):
-            pass
-        from zope.component import ComponentLookupError
-        self.assertRaises(ComponentLookupError, create_content, IBar)
-
-    def test_get_content_types(self):
-        from repoze.lemonade.tests.fixtureapp import content
-        context = self.get_context()
-        from repoze.lemonade.content import get_content_types
-        types = get_content_types()
-        self.assertEqual(len(types), 1)
-        foo = types[0]
-        self.assertEqual(foo, content.IFoo)
 
 class DummyContext:
     info = None

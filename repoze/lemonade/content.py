@@ -16,13 +16,17 @@ def create_content(iface, *arg, **kw):
     factory = getAdapter(provides(iface), IContentFactory)
     return factory(*arg, **kw)
 
-def get_content_types():
+def get_content_types(context=None):
     """ Return a sequence of interface objects that have been
     registered as content types. """
     types = []
     gsm = getGlobalSiteManager()
     for reg in gsm.registeredAdapters():
         if reg.provided is IContentFactory:
-            types.append(reg.required[0])
+            iface = reg.required[0]
+            if not context:
+                types.append(iface)
+            elif iface.providedBy(context):
+                types.append(iface)
     return types
         

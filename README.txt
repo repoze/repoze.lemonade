@@ -99,9 +99,12 @@ The available API functions in this module are::
           Raise a ComponentLookupError  if there is no content type related to 
           ``iface`` """
 
-  def get_content_types():
-      """ Return a sequence of interface objects representing content types
-          available for instantiation """
+  def get_content_types(context=None):
+      """ If ``context`` is None, return a sequence of all registered
+          interface objects representing content types available for
+          instantiation.  If ``context`` is not None, return a
+          sequence of interface objects which are content types which
+          are supplied by the context object. """
 
 Only types registered via the ``lemonade:content`` directive are
 considered by ``create_content`` and ``get_content_types``.
