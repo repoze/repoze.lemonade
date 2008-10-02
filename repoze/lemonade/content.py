@@ -18,7 +18,8 @@ def create_content(iface, *arg, **kw):
 
 def get_content_types(context=None):
     """ Return a sequence of interface objects that have been
-    registered as content types. """
+    registered as content types.  If ``context`` is used, return only
+    the content_type interfaces which are provided by the context."""
     types = []
     gsm = getGlobalSiteManager()
     for reg in gsm.registeredAdapters():
