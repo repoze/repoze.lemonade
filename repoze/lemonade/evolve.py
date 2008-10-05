@@ -21,16 +21,3 @@ def evolve(package, ob, transaction=transaction):
             transaction.commit()
         return version
     return db_version
-
-    
-    
-
-            
-            
-    
-    
-    
-    
-    
-    
-    
