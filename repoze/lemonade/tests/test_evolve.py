@@ -33,15 +33,14 @@ class EvolveTests(unittest.TestCase):
         self.assertEqual(reg['repoze.lemonade.tests.fixtureapp.evolve'], 2)
 
     def test_evolve_error(self):
-        root = {'repoze.lemonade.evolve':
-                {'repoze.lemonade.tests.fixtureapp.evolve':1}}
+        root = {}
         ob = DummyPersistent(root)
         t = DummyTransaction()
         from repoze.lemonade.tests.fixtureapp import evolve
         evolve.__version__ = 3
         self.assertRaises(ValueError, self._callFUT, evolve, ob, t)
         self.assertEqual(ob.evolved, 2)
-        self.assertEqual(t.committed, 1)
+        self.assertEqual(t.committed, 2)
         reg = root['repoze.lemonade.evolve']
         self.assertEqual(reg['repoze.lemonade.tests.fixtureapp.evolve'], 2)
 
