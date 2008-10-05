@@ -1,3 +1,8 @@
+Next release
+
+  Added ``evolve`` module; useful to evolve ZODB data structures in
+  lockstep with package changes.
+
 0.1
 
   Initial release.
