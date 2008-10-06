@@ -1,7 +1,8 @@
-Next release
+0.2 (2008/10/05)
 
-  Added ``evolve`` module; useful to evolve ZODB data structures in
-  lockstep with package changes.
+  Added ``evolution`` module; useful to evolve ZODB and other
+  persistent data structures in lockstep with code changes.  Needs
+  documentation.
 
 0.1
 
