@@ -2,8 +2,8 @@ import unittest
 
 class EvolveTests(unittest.TestCase):
     def _callFUT(self, *arg, **kw):
-        from repoze.lemonade.evolve import evolve
-        return evolve(*arg, **kw)
+        from repoze.lemonade.evolution import evolve_to_latest
+        return evolve_to_latest(*arg, **kw)
 
     def test_success_no_db_version(self):
         root = {}

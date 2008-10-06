@@ -3,7 +3,7 @@ import transaction
 
 KEY = 'repoze.lemonade.evolve'
 
-def evolve(package, ob, transaction=transaction):
+def evolve_to_latest(package, ob, transaction=transaction):
     # transaction overrideable for unit tests
     package_name = package.__name__
     package_version = getattr(package, '__version__', 0)
