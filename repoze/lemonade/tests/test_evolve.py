@@ -13,7 +13,7 @@ class EvolveTests(unittest.TestCase):
         evolve.__version__ = 1
         v = self._callFUT(evolve, ob, t)
         self.assertEqual(v, 1)
-        self.assertEqual(ob.evolved, 1)
+        self.assertEqual(ob.evolved, None)
         self.assertEqual(t.committed, 1)
         reg = root['repoze.lemonade.evolve']
         self.assertEqual(reg['repoze.lemonade.tests.fixtureapp.evolve'], 1)
@@ -33,7 +33,8 @@ class EvolveTests(unittest.TestCase):
         self.assertEqual(reg['repoze.lemonade.tests.fixtureapp.evolve'], 2)
 
     def test_evolve_error(self):
-        root = {}
+        root = {'repoze.lemonade.evolve':
+                {'repoze.lemonade.tests.fixtureapp.evolve':0}}
         ob = DummyPersistent(root)
         t = DummyTransaction()
         from repoze.lemonade.tests.fixtureapp import evolve
@@ -48,7 +49,6 @@ class EvolveTests(unittest.TestCase):
         root = {'repoze.lemonade.evolve':
                 {'repoze.lemonade.tests.fixtureapp.evolve':1}}
         ob = DummyPersistent(root)
-        ob.evolved = None
         t = DummyTransaction()
         from repoze.lemonade.tests.fixtureapp import evolve
         evolve.__version__ = 1
@@ -63,6 +63,7 @@ class Dummy(object):
     pass
 
 class DummyPersistent(object):
+    evolved = None
     def __init__(self, root):
         self._p_jar = Dummy()
         self._p_jar.root = lambda *arg: root
@@ -70,8 +71,12 @@ class DummyPersistent(object):
         
 class DummyTransaction(object):
     committed = 0
+    begun = 0
     def commit(self):
         self.committed = self.committed + 1
+
+    def begin(self):
+        self.begun = self.begun + 1
         
         
         
