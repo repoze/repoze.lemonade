@@ -1,61 +1,70 @@
 import unittest
 
-class EvolveTests(unittest.TestCase):
-    def _callFUT(self, *arg, **kw):
+class ZODBEvolutionManagerTests(unittest.TestCase):
+    def _evolve(self, *arg, **kw):
         from repoze.lemonade.evolution import evolve_to_latest
         return evolve_to_latest(*arg, **kw)
 
+    def _getTargetClass(self):
+        from repoze.lemonade.evolution import ZODBEvolutionManager
+        return ZODBEvolutionManager
+
+    def _makeOne(self, root, sw_version):
+        klass = self._getTargetClass()
+        context = DummyPersistent(root)
+        manager = klass(context, 'repoze.lemonade.tests.fixtureapp.evolve',
+                        sw_version)
+        manager.transaction = DummyTransaction()
+        return manager
+
+    def test_verify(self):
+        from repoze.lemonade.interfaces import IEvolutionManager
+        from zope.interface.verify import verifyClass
+        from zope.interface.verify import verifyObject
+        klass = self._getTargetClass()
+        verifyClass(IEvolutionManager, klass)
+        inst = klass(None, None, None)
+        verifyObject(IEvolutionManager, inst)
+        
     def test_success_no_db_version(self):
         root = {}
-        ob = DummyPersistent(root)
-        t = DummyTransaction()
-        from repoze.lemonade.tests.fixtureapp import evolve
-        evolve.__version__ = 1
-        v = self._callFUT(evolve, ob, t)
-        self.assertEqual(v, 1)
-        self.assertEqual(ob.evolved, None)
-        self.assertEqual(t.committed, 1)
+        manager = self._makeOne(root, 1)
+        version = self._evolve(manager)
+        self.assertEqual(version, 1)
+        self.assertEqual(manager.context.evolved, None)
+        self.assertEqual(manager.transaction.committed, 1)
         reg = root['repoze.lemonade.evolve']
         self.assertEqual(reg['repoze.lemonade.tests.fixtureapp.evolve'], 1)
 
     def test_success_with_db_version(self):
         root = {'repoze.lemonade.evolve':
                 {'repoze.lemonade.tests.fixtureapp.evolve':1}}
-        ob = DummyPersistent(root)
-        t = DummyTransaction()
-        from repoze.lemonade.tests.fixtureapp import evolve
-        evolve.__version__ = 2
-        v = self._callFUT(evolve, ob, t)
-        self.assertEqual(v, 2)
-        self.assertEqual(ob.evolved, 2)
-        self.assertEqual(t.committed, 1)
+        manager = self._makeOne(root, 2)
+        version = self._evolve(manager)
+        self.assertEqual(version, 2)
+        self.assertEqual(manager.context.evolved, 2)
+        self.assertEqual(manager.transaction.committed, 1)
         reg = root['repoze.lemonade.evolve']
         self.assertEqual(reg['repoze.lemonade.tests.fixtureapp.evolve'], 2)
 
     def test_evolve_error(self):
         root = {'repoze.lemonade.evolve':
                 {'repoze.lemonade.tests.fixtureapp.evolve':0}}
-        ob = DummyPersistent(root)
-        t = DummyTransaction()
-        from repoze.lemonade.tests.fixtureapp import evolve
-        evolve.__version__ = 3
-        self.assertRaises(ValueError, self._callFUT, evolve, ob, t)
-        self.assertEqual(ob.evolved, 2)
-        self.assertEqual(t.committed, 2)
+        manager = self._makeOne(root, 3)
+        self.assertRaises(ValueError, self._evolve, manager)
+        self.assertEqual(manager.context.evolved, 2)
+        self.assertEqual(manager.transaction.committed, 2)
         reg = root['repoze.lemonade.evolve']
         self.assertEqual(reg['repoze.lemonade.tests.fixtureapp.evolve'], 2)
 
     def test_noevolve(self):
         root = {'repoze.lemonade.evolve':
                 {'repoze.lemonade.tests.fixtureapp.evolve':1}}
-        ob = DummyPersistent(root)
-        t = DummyTransaction()
-        from repoze.lemonade.tests.fixtureapp import evolve
-        evolve.__version__ = 1
-        v = self._callFUT(evolve, ob, t)
-        self.assertEqual(v, 1)
-        self.assertEqual(ob.evolved, None)
-        self.assertEqual(t.committed, 0)
+        manager = self._makeOne(root, 1)
+        version = self._evolve(manager)
+        self.assertEqual(version, 1)
+        self.assertEqual(manager.context.evolved, None)
+        self.assertEqual(manager.transaction.committed, 0)
         reg = root['repoze.lemonade.evolve']
         self.assertEqual(reg['repoze.lemonade.tests.fixtureapp.evolve'], 1)
 

@@ -99,5 +99,14 @@ class IFolder(Interface):
         ``__name__`` and ``__parent__`` value, an
         ``ObjectRemovedEvent`` will be emitted."""
         
-    
+class IEvolutionManager(Interface):
+    def get_sw_version():
+        """ Return the software version of the managed package """
 
+    def get_db_version():
+        """ Return the database version of the managed package """
+
+    def evolve_to(version):
+        """ Perform work to evolve to the integer ``version``.  This
+        method is also responsible for setting the db version after a
+        success."""
