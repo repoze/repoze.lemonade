@@ -64,3 +64,19 @@ class StateMachine(Persistent):
         transitions = [t_id for (state, t_id) in self.states.keys()
                        if state == from_state and t_id is not None]
         return transitions
+
+    def before_transition(self):
+        """
+        Hook method to be overridden by subclasses (or injected
+        directly onto an instance) to allow for before transition
+        actions (such as firing an event).
+        """
+        pass
+
+    def after_transition(self):
+        """
+        Hook method to be overridden by subclasses (or injected
+        directly onto an instance) to allow for after transition
+        actions (such as firing an event).
+        """
+        pass
