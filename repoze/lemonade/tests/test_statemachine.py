@@ -23,7 +23,7 @@ class StateMachineTests(unittest.TestCase, PlacelessSetup):
         self.assertEqual(sm.states[('start', 'add')], ('adding', None))
         self.assertEqual(sm.states[('start', 'get')], ('getting', None))
 
-    def test_actions(self):
+    def test_transitions(self):
         sm = self._makeOne(initial_state='pending')
         sm.add('pending', 'publish', 'published', None)
         sm.add('pending', 'reject', 'private', None)
@@ -33,17 +33,17 @@ class StateMachineTests(unittest.TestCase, PlacelessSetup):
         class ReviewedObject:
             pass
         ob = ReviewedObject()
-        self.assertEqual(sorted(sm.actions(ob)), ['publish', 'reject'])
-        self.assertEqual(sorted(sm.actions(ob, from_state='private')),
+        self.assertEqual(sorted(sm.transitions(ob)), ['publish', 'reject'])
+        self.assertEqual(sorted(sm.transitions(ob, from_state='private')),
                          ['submit'])
         ob.state = 'published'
-        self.assertEqual(sorted(sm.actions(ob)), ['retract'])
+        self.assertEqual(sorted(sm.transitions(ob)), ['retract'])
 
     def test_execute(self):
         sm = self._makeOne(initial_state='pending')
         args = []
-        def dummy(state, newstate, action, context):
-            args.append((state, newstate, action, context))
+        def dummy(state, newstate, transition_id, context):
+            args.append((state, newstate, transition_id, context))
         sm.add('pending', 'publish', 'published', dummy)
         sm.add('pending', 'reject', 'private', dummy)
         sm.add('published', 'retract', 'pending', dummy)

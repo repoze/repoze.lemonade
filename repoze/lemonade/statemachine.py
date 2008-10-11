@@ -13,15 +13,15 @@ class StateMachineError(Exception):
 class StateMachine(Persistent):
     """ Persistent finite state machine featuring transition actions.
 
-    The class stores a dictionary of (state, action) keys,
-    and (state, transition) values.
+    The class stores a dictionary of (state, transition_id) keys, and
+    (state, transition_fn) values.
 
-    When a (state, action) search is performed:
+    When a (state, transition_id) search is performed:
     * an exact match is checked first,
     * (state, None) is checked next.
 
-    The action is of the following form:
-    * function(current_state, new_state, action, context)
+    The transition function must be of the following form:
+    * function(current_state, new_state, transition_id, context)
     """
 
     def __init__(self, state_attr, initial_state=None):
@@ -29,17 +29,17 @@ class StateMachine(Persistent):
         self.state_attr = state_attr
         self.initial_state = initial_state
 
-    def add(self, state, action, newstate, transition_fn):
+    def add(self, state, transition_id, newstate, transition_fn):
         """Add a transition to the FSM."""
-        self.states[(state, action)] = (newstate, transition_fn)
+        self.states[(state, transition_id)] = (newstate, transition_fn)
         self._p_changed = True
 
-    def execute(self, context, action):
+    def execute(self, context, transition_id):
         """Perform a transition and execute an action."""
         state = getattr(context, self.state_attr, _marker) 
         if state is _marker:
             state = self.initial_state
-        si = (state, action)
+        si = (state, transition_id)
         sn = (state, None)
         newstate = None
         # exact state match?
@@ -50,22 +50,17 @@ class StateMachine(Persistent):
             newstate, transition_fn = self.states[sn]
         if newstate is None:
             raise StateMachineError(
-                'No transition from %r using action %r' % (state, action))
-        transition_fn(state, newstate, action, context)
+                'No transition from %r using transition %r' % (state, transition_id))
+        transition_fn(state, newstate, transition_id, context)
         setattr(context, self.state_attr, newstate)
 
     def state_of(self, context):
         state = getattr(context, self.state_attr, self.initial_state)
         return state
 
-    def actions(self, context, from_state=None):
+    def transitions(self, context, from_state=None):
         if from_state is None:
             from_state = self.state_of(context)
-        actions = []
-        for (state, action) in self.states.keys():
-            if state == from_state:
-                if action is not None:
-                    actions.append(action)
-        return actions
-    
-                
+        transitions = [t_id for (state, t_id) in self.states.keys()
+                       if state == from_state and t_id is not None]
+        return transitions
