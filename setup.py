@@ -27,12 +27,10 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
     'setuptools',
-    'ZODB3',
     'zope.component',
     'zope.interface',
-    'zope.configuration',
-    'zope.schema',
     'zope.security',
+    'zope.configuration',
     ]
 
 setup(name='repoze.lemonade',
