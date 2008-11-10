@@ -1,10 +1,12 @@
-Next release
+0.3 (2008/10/11)
 
  Evolution machinery moved to ``repoze.evolution``.
 
  Workflow machinery moved to ``repoze.workflow``.
 
  Folder machinery moved to ``repoze.folder``.
+
+ (Remaining: content registrations)
 
 0.2 (2008/10/05)
 
