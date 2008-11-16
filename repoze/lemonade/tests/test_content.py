@@ -62,4 +62,43 @@ class TestContent(unittest.TestCase, PlacelessSetup):
         self.assertEqual(len(types), 1)
         self.assertEqual(types, [content.IBar])
         
+    def test_get_content_type_withcontent(self):
+        self._setupContentTypes()
+        from repoze.lemonade.tests.fixtureapp import content
+        from repoze.lemonade.content import get_content_type
+        from zope.interface import implements
+        class Fred:
+            implements(content.IBar)
+        fred = Fred()
+        type = get_content_type(fred)
+        self.assertEqual(type, content.IBar)
+
+    def test_get_content_type_withcontent_multipletypes(self):
+        self._setupContentTypes()
+        from repoze.lemonade.tests.fixtureapp import content
+        from repoze.lemonade.content import get_content_type
+        from zope.interface import implements
+        class Fred:
+            implements(content.IBar, content.IFoo)
+        fred = Fred()
+        self.assertRaises(ValueError, get_content_type, Fred)
+
+    def test_get_content_type_withnoncontent(self):
+        self._setupContentTypes()
+        from repoze.lemonade.content import get_content_type
+        class Fred:
+            pass
+        fred = Fred()
+        self.assertRaises(ValueError, get_content_type, Fred)
+
+    def test_iscontent(self):
+        self._setupContentTypes()
+        from repoze.lemonade.tests.fixtureapp import content
+        from repoze.lemonade.content import is_content
+        from zope.interface import implements
+        class Fred:
+            implements(content.IBar)
+        fred = Fred()
+        self.failUnless(is_content(fred))
+        self.failIf(is_content(None))
 

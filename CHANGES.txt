@@ -1,3 +1,7 @@
+Next release
+
+ Add ``is_content`` and ``get_content_type`` APIs to content module.
+
 0.3 (2008/10/11)
 
  Evolution machinery moved to ``repoze.evolution``.
