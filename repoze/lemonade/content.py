@@ -1,4 +1,4 @@
-from zope.component import getGlobalSiteManager
+from zope.component import getSiteManager
 from zope.component import getAdapter
 from zope.interface import directlyProvides
 
@@ -24,7 +24,7 @@ def get_content_types(context=_marker):
     registered as content types.  If ``context`` is used, return only
     the content_type interfaces which are provided by the context."""
     types = []
-    gsm = getGlobalSiteManager()
+    gsm = getSiteManager()
     for reg in gsm.registeredAdapters():
         if reg.provided is IContentFactory:
             iface = reg.required[0]

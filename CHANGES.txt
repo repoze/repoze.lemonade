@@ -1,3 +1,11 @@
+0.6 (2008/12/2)
+
+ Use ``zope.component.getSiteManager`` instead of
+ ``zope.component.getGlobalSiteManager`` to find an adapter registry.
+ This helps bfg inasmuch as it will use the bfg registry rather than
+ the base registry when getSiteManager has been hooked; it will fall
+ back to getting the global site manager if it has not been hooked.
+
 0.5 (2008/12/2)
 
  Add ``IContent`` interface.  When an ``IFoo`` interface is declared via
