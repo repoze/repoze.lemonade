@@ -82,3 +82,35 @@ hold of the content interface via:
    :linenos:
 
    IMyContentType.getTaggedValue('name')
+
+The ``IContent`` Interface
+--------------------------
+
+When any interface is blessed as a "content" interface via the
+``lemonade:content`` ZCML directive, the blessed interface will have
+the ``repoze.lemonade.interfaces.IContent`` interface folded into its
+``__bases__``.  This means that an object that implements any
+interface that has been blessed by ``lemonade:content`` will have
+``repoze.lemonade.interfaces.IContent`` in its interface resolution order.
+
+For example, the last expression of the following example code will
+return ``True`` if ``IFoo`` has been declared ``lemonade:content`` via
+ZCML, and the ZCML has been executed:
+
+.. code-block::
+   :linenos:
+
+   from zope.interface import Interface
+   from zope.interface import providedBy
+   from repoze.lemonade.interfaces import IContent
+
+   class IFoo(Interface):
+       pass
+   
+   class Foo:
+       implements(IFoo)
+
+   foo = Foo()
+   IContent.providedBy(foo)
+   
+

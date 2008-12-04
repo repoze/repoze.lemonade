@@ -1,5 +1,11 @@
 Next release
 
+ Add ``IContent`` interface.  When an ``IFoo`` interface is declared via
+ ZCML as ``lemonade:content``, add the ``IContent`` interface to the
+ ``__bases__`` of the ``IFoo`` interface when the ZCML executes.
+
+0.4 (unknown)
+
  Add ``is_content`` and ``get_content_type`` APIs to content module.
 
 0.3 (2008/10/11)

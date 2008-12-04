@@ -92,13 +92,12 @@ class TestContent(unittest.TestCase, PlacelessSetup):
         self.assertRaises(ValueError, get_content_type, Fred)
 
     def test_iscontent(self):
-        self._setupContentTypes()
-        from repoze.lemonade.tests.fixtureapp import content
-        from repoze.lemonade.content import is_content
         from zope.interface import implements
-        class Fred:
-            implements(content.IBar)
-        fred = Fred()
-        self.failUnless(is_content(fred))
+        from repoze.lemonade.interfaces import IContent
+        from repoze.lemonade.content import is_content
+        class Content:
+            implements(IContent)
+        content = Content()
+        self.failUnless(is_content(content))
         self.failIf(is_content(None))
 

@@ -3,6 +3,7 @@ from zope.component import getAdapter
 from zope.interface import directlyProvides
 
 from repoze.lemonade.interfaces import IContentFactory
+from repoze.lemonade.interfaces import IContent
 
 class provides:
     def __init__(self, iface):
@@ -46,5 +47,5 @@ def get_content_type(context):
 def is_content(model):
     """ Return True if the model object provides any interface
     registered as a content type, False otherwise. """
-    return bool(get_content_types(model))
+    return IContent.providedBy(model)
 

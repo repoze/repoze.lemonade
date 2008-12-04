@@ -12,14 +12,21 @@ class TestContentDirective(unittest.TestCase, PlacelessSetup):
         from repoze.lemonade.zcml import content
         return content(*arg, **kw)
 
+    def test_not_an_interface(self):
+        from zope.configuration.exceptions import ConfigurationError
+        context = DummyContext()
+        self.assertRaises(ConfigurationError, self._callFUT, context,None, None)
+
     def test_it(self):
         class Foo:
             def __init__(self, **kw):
                 self.kw = kw
 
         from zope.interface import Interface
+        from repoze.lemonade.interfaces import IContent
         from repoze.lemonade.interfaces import IContentType
         from repoze.lemonade.interfaces import IContentFactory
+        from repoze.lemonade.zcml import addbase
 
         class IFoo(Interface):
             pass
@@ -31,14 +38,20 @@ class TestContentDirective(unittest.TestCase, PlacelessSetup):
 
         self._callFUT(context, Foo, IFoo)
 
-        self.assertEqual(len(context.actions), 2)
+        self.assertEqual(len(context.actions), 3)
         provide = context.actions[0]
         self.assertEqual(provide['discriminator'],
                          ('content', IFoo, IContentType))
         self.assertEqual(provide['callable'], provideInterface)
         self.assertEqual(provide['args'], ('', IFoo, IContentType))
 
-        register = context.actions[1]
+        provide = context.actions[1]
+        self.assertEqual(provide['discriminator'],
+                         ('content', IFoo, IContent))
+        self.assertEqual(provide['callable'], addbase)
+        self.assertEqual(provide['args'], (IFoo, IContent))
+
+        register = context.actions[2]
         self.assertEqual(register['discriminator'],
                          ('content', Foo, IFoo, IContentFactory))
         self.assertEqual(register['callable'], handler)
@@ -70,6 +83,28 @@ class TestPickling(unittest.TestCase, PlacelessSetup):
         dumped = cPickle.dumps(actions, -1)
         new = cPickle.loads(dumped)
         self.assertEqual(len(actions), len(new))
+
+class TestAddBase(unittest.TestCase):
+    def _callFUT(self, I1, I2):
+        from repoze.lemonade.zcml import addbase
+        return addbase(I1, I2)
+
+    def test_already_in_iro(self):
+        from repoze.lemonade.interfaces import IContent
+        class IFoo(IContent):
+            pass
+        result = self._callFUT(IFoo, IContent)
+        self.assertEqual(result, False)
+        
+    def test_not_in_iro(self):
+        from zope.interface import Interface
+        from repoze.lemonade.interfaces import IContent
+        class IFoo(Interface):
+            pass
+        result = self._callFUT(IFoo, IContent)
+        self.assertEqual(result, True)
+        self.failUnless(IContent in IFoo.__bases__)
+        self.failUnless(IContent in IFoo.__iro__)
 
 class DummyContext:
     info = None

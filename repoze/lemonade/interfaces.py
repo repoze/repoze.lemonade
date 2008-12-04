@@ -2,10 +2,14 @@ from zope.interface import Interface
 from zope.interface.interfaces import IInterface
 
 class IContentType(IInterface):
-    """ Interface type representing a content type """
+    """ Interface meta-type representing a content type """
 
 class IContentFactory(Interface):
     """ Content factory """
     def __call__(*arg, **kw):
         """ Return a content instance  """
     
+class IContent(Interface):
+    """ Marker interface appended to the ``__bases__`` of another
+    interface when it is declared to be content via the ZCML
+    ``lemonade:content`` directive"""
