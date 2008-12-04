@@ -1,8 +1,11 @@
-Next release
+0.5 (2008/12/2)
 
  Add ``IContent`` interface.  When an ``IFoo`` interface is declared via
  ZCML as ``lemonade:content``, add the ``IContent`` interface to the
  ``__bases__`` of the ``IFoo`` interface when the ZCML executes.
+
+ Change how ``is_content`` works: use IContent.providedBy(object)
+ instead of scanning the application registry for factories.
 
 0.4 (unknown)
 

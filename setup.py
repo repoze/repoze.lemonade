@@ -12,7 +12,7 @@
 #
 ##############################################################################
 
-__version__ = '0.4'
+__version__ = '0.5'
 
 import os
 
@@ -33,10 +33,13 @@ requires = [
     'zope.configuration',
     ]
 
+_DESC = """ repoze.lemonade is a collection of utilties that make it possible
+to create Zope CMF-like applications without requiring any particular
+persistence mechanism. It makes use of the Zope component architecture. """
+
 setup(name='repoze.lemonade',
       version=__version__,
-      description=('ZODB-based data structures and utilities for use under a '
-                   'repoze.bfg application'),
+      description=_DESC,
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
         "Development Status :: 3 - Alpha",
