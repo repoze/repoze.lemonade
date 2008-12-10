@@ -1,5 +1,6 @@
 from zope.interface import Interface
 from zope.interface.interfaces import IInterface
+from zope.interface import providedBy
 
 from zope.component.interface import provideInterface
 
@@ -7,6 +8,8 @@ from zope.configuration.exceptions import ConfigurationError
 from zope.configuration.fields import GlobalObject
 from zope.configuration.fields import GlobalInterface
 from zope.component.zcml import handler
+
+from zope.schema import TextLine
 
 from repoze.lemonade.interfaces import IContentType
 from repoze.lemonade.interfaces import IContentFactory
@@ -63,3 +66,86 @@ def content(_context, factory, type):
         args = ('registerAdapter',
                 hammer, (type,), IContentFactory, '', _context.info),
         )
+
+class IListItemDirective(Interface):
+    provides = GlobalInterface(
+        title=u"Provided interface",
+        description=u"Interface provided by the utility.",
+        required=True,
+        )
+
+    component = GlobalObject(
+        title=u"Component to use",
+        description=(u"Python name of the implementation object.  This"
+                      " must identify an object in a module using the"
+                      " full dotted name.  If specified, the"
+                      " ``factory`` field must be left blank."),
+        required=False,
+        )
+
+    factory = GlobalObject(
+        title=u"Factory",
+        description=(u"Python name of a factory which can create the"
+                      " implementation object.  This must identify an"
+                      " object in a module using the full dotted name."
+                      " If specified, the ``component`` field must"
+                      " be left blank."),
+        required=False,
+        )
+    
+    name = TextLine(
+        title=u"Name",
+        description=(u"Name of the registration.  This is used by"
+                     " application code when locating a utility."),
+        required=False,
+        )
+
+    title = TextLine(
+        title=u"Title",
+        description=u"Title for the registration.",
+        required=False,
+        )
+
+    description = TextLine(
+        title=u"Description",
+        description=u"Description for the registration.",
+        required=False,
+        )
+
+    sort_key = TextLine(
+        title=u"Description",
+        description=u"Description for the registration.",
+        required=False,
+        )
+
+def listitem(_context, provides=None, component=None, factory=None, name=None,
+             title=None, description=None, sort_key=0):
+
+    if factory:
+        if component:
+            raise TypeError("Can't specify factory and component.")
+        component = factory()
+
+    if name is None:
+        raise TypeError('name must not be specified')
+
+    if provides is None:
+        provides = list(providedBy(component))
+        if len(provides) == 1:
+            provides = provides[0]
+        else:
+            raise TypeError("Missing 'provides' attribute")
+
+    try:
+        sort_key = int(sort_key)
+    except (TypeError, ValueError):
+        pass
+
+    info = {'title':title, 'description':description, 'sort_key':sort_key}
+
+    _context.action(
+        discriminator = ('utility', provides, name),
+        callable = handler,
+        args = ('registerUtility', component, provides, name, info),
+        )
+

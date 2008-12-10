@@ -1,12 +1,12 @@
 import unittest
-from zope.component.testing import PlacelessSetup
+from zope.testing.cleanup import cleanUp
 
-class TestContentDirective(unittest.TestCase, PlacelessSetup):
+class TestContentDirective(unittest.TestCase):
     def setUp(self):
-        PlacelessSetup.setUp(self)
+        cleanUp()
 
     def tearDown(self):
-        PlacelessSetup.tearDown(self)
+        cleanUp()
 
     def _callFUT(self, *arg, **kw):
         from repoze.lemonade.zcml import content
@@ -62,12 +62,89 @@ class TestContentDirective(unittest.TestCase, PlacelessSetup):
         self.assertEqual(register['args'][4], '')
         self.assertEqual(register['args'][5], context.info)
 
-class TestPickling(unittest.TestCase, PlacelessSetup):
+class TestListitemDirective(unittest.TestCase):
     def setUp(self):
-        PlacelessSetup.setUp(self)
+        cleanUp()
 
     def tearDown(self):
-        PlacelessSetup.tearDown(self)
+        cleanUp()
+
+    def _callFUT(self, *arg, **kw):
+        from repoze.lemonade.zcml import listitem
+        return listitem(*arg, **kw)
+
+    def test_spec_both_factory_and_component(self):
+        context = DummyContext()
+        self.assertRaises(TypeError, self._callFUT, factory='abc',
+                          component='abc', name='foo')
+    
+    def test_missing_provides_attribute(self):
+        context = DummyContext()
+        self.assertRaises(TypeError, self._callFUT, component='abc', name='foo')
+
+    def test_missing_name_attribute(self):
+        from zope.interface import Interface
+        class IDummy(Interface):
+            pass
+        context = DummyContext()
+        self.assertRaises(TypeError, self._callFUT, component='abc',
+                          provides=IDummy)
+
+
+    def test_component(self):
+        from zope.interface import Interface
+        from zope.component.zcml import handler
+        class IDummy(Interface):
+            pass
+        component = lambda *x: 'foo'
+        context = DummyContext()
+        self._callFUT(context,
+                      component=component, provides=IDummy, name='googe',
+                      title='The title', description='The description',
+                      sort_key='1')
+
+        info = {'title':'The title', 'description':'The description',
+                'sort_key':1}
+
+        self.assertEqual(len(context.actions), 1)
+        provide = context.actions[0]
+        self.assertEqual(provide['discriminator'],
+                         ('utility', IDummy, 'googe'))
+        self.assertEqual(provide['callable'], handler)
+        self.assertEqual(provide['args'], ('registerUtility', component,
+                                           IDummy, 'googe', info))
+
+
+    def test_factory(self):
+        from zope.interface import Interface
+        from zope.component.zcml import handler
+        class IDummy(Interface):
+            pass
+        factory = lambda *x: 'foo'
+        context = DummyContext()
+        self._callFUT(context,
+                      factory=factory, provides=IDummy, name='googe',
+                      title='The title', description='The description',
+                      sort_key='1')
+
+        info = {'title':'The title', 'description':'The description',
+                'sort_key':1}
+
+        self.assertEqual(len(context.actions), 1)
+        provide = context.actions[0]
+        self.assertEqual(provide['discriminator'],
+                         ('utility', IDummy, 'googe'))
+        self.assertEqual(provide['callable'], handler)
+        self.assertEqual(provide['args'], ('registerUtility', 'foo',
+                                           IDummy, 'googe', info))
+
+
+class TestPickling(unittest.TestCase):
+    def setUp(self):
+        cleanUp()
+
+    def tearDown(self):
+        cleanUp()
 
     def test_registry_actions_can_be_pickled_and_unpickled(self):
         import repoze.lemonade.tests.fixtureapp as package

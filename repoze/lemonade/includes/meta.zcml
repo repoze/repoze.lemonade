@@ -10,6 +10,12 @@
         handler="repoze.lemonade.zcml.content"
         />
 
+    <meta:directive
+        name="listitem"
+        schema="repoze.lemonade.zcml.IListItemDirective"
+        handler="repoze.lemonade.zcml.listitem"
+        />
+
   </meta:directives>
 
 </configure>

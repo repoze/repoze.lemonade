@@ -13,5 +13,23 @@
       factory=".content.Bar"
       type=".content.IBar"
       />
+      
+  <lemonade:listitem
+     provides=".content.IListItem"
+     component=".content.listitemcomponent"
+     name="apple"
+     title="Apple"
+     description="arbitrary info about apple"
+     sort_key="10"
+     />
+
+  <lemonade:listitem
+     provides=".content.IListItem"
+     component=".content.listitemcomponent"
+     name="beeswax"
+     title="Beeswax"
+     description="arbitrary info about beeswax"
+     sort_key="20"
+     />
 
 </configure>

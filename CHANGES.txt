@@ -1,3 +1,7 @@
+Next release
+
+ Add ``lemonade:listitem`` directive and ``get_listitems`` API.
+
 0.6 (2008/12/2)
 
  Use ``zope.component.getSiteManager`` instead of

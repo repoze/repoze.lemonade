@@ -16,4 +16,9 @@ class Bar:
 class IBar(Interface):
     pass
     
-    
+class IListItem(Interface):
+    pass
+
+def listitemcomponent():
+    pass
+
