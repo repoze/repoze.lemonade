@@ -61,6 +61,21 @@ class TestContent(unittest.TestCase):
         types = get_content_types(fred)
         self.assertEqual(len(types), 1)
         self.assertEqual(types, [content.IBar])
+
+    def test_get_content_types_does_caching(self):
+        self._setupContentTypes()
+        from repoze.lemonade.tests.fixtureapp import content
+        from repoze.lemonade.content import get_content_types
+        from repoze.lemonade.interfaces import IContentTypeCache
+        from zope.interface import implements
+        from zope.component import getSiteManager
+        class Fred:
+            implements(content.IBar)
+        fred = Fred()
+        types = get_content_types(fred)
+        sm = getSiteManager()
+        cache = sm.getUtility(IContentTypeCache)
+        self.failUnless(content.IBar in cache)
         
     def test_get_content_type_withcontent(self):
         self._setupContentTypes()

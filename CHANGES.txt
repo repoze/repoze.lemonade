@@ -1,3 +1,10 @@
+0.7.1 (2008/12/12)
+
+ Speed up ``get_content_type`` and ``get_content_types`` by using a
+ content type cache rather than rooting through the adapter registry
+ every time we need to call them.  To invalidate the cache, do
+ ``sitemanager.unregisterUtility(IContentTypeCache)``.
+
 0.7 (2008/12/10)
 
  Add ``lemonade:listitem`` directive and ``get_listitems`` API.

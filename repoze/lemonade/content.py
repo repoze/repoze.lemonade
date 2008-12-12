@@ -4,6 +4,7 @@ from zope.interface import directlyProvides
 
 from repoze.lemonade.interfaces import IContentFactory
 from repoze.lemonade.interfaces import IContent
+from repoze.lemonade.interfaces import IContentTypeCache
 
 class provides:
     def __init__(self, iface):
@@ -23,15 +24,24 @@ def get_content_types(context=_marker):
     """ Return a sequence of interface objects that have been
     registered as content types.  If ``context`` is used, return only
     the content_type interfaces which are provided by the context."""
+    sm = getSiteManager()
+    cache = sm.queryUtility(IContentTypeCache)
+
+    if cache is None:
+        # use a utility to cache the result of calling sm.registeredAdapters
+        cache = set()
+        sm.registerUtility(cache, IContentTypeCache)
+        for reg in sm.registeredAdapters():
+            if reg.provided is IContentFactory:
+                iface = reg.required[0]
+                cache.add(iface)
+
     types = []
-    gsm = getSiteManager()
-    for reg in gsm.registeredAdapters():
-        if reg.provided is IContentFactory:
-            iface = reg.required[0]
-            if context is _marker:
-                types.append(iface)
-            elif iface.providedBy(context):
-                types.append(iface)
+    for iface in cache:
+        if context is _marker:
+            types.append(iface)
+        elif iface.providedBy(context):
+            types.append(iface)
     return types
         
 def get_content_type(context):
