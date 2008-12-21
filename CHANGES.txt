@@ -1,4 +1,4 @@
-Next release
+0.7.2 (2008/12/21)
 
  Make changes that allow us not to require "zope.security" (and its
  dependencies).
