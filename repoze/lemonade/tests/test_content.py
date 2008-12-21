@@ -46,9 +46,9 @@ class TestContent(unittest.TestCase):
         self._setupContentTypes()
         from repoze.lemonade.tests.fixtureapp import content
         from repoze.lemonade.content import get_content_types
-        types = get_content_types()
+        types =sorted(get_content_types())
         self.assertEqual(len(types), 2)
-        self.assertEqual(types, [content.IFoo, content.IBar])
+        self.assertEqual(types, [content.IBar, content.IFoo])
 
     def test_get_content_types_context(self):
         self._setupContentTypes()
