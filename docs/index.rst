@@ -66,7 +66,7 @@ will result in an error).  See `the Zope 3 API documentation
 for more information about setting and retrieving tagged values on
 interfaces.  Here's an example:
 
-.. code-block::
+.. code-block:: python
    :linenos:
 
    from zope.interface import Interface
@@ -79,7 +79,7 @@ interfaces.  Here's an example:
 You should then be able to retrieve this metadata after you have a
 hold of the content interface via:
 
-.. code-block::
+.. code-block:: python
    :linenos:
 
    IMyContentType.getTaggedValue('name')
@@ -98,7 +98,7 @@ For example, the last expression of the following example code will
 return ``True`` if ``IFoo`` has been declared ``lemonade:content`` via
 ZCML, and the ZCML has been executed:
 
-.. code-block::
+.. code-block:: python
    :linenos:
 
    from zope.interface import Interface
@@ -127,7 +127,7 @@ sequences.  It uses a (shameful) "sort_key" to provide orderability.
 
 For example:
 
-.. code-block::
+.. code-block:: xml
    :linenos:
 
     <configure xmlns="http://namespaces.zope.org/zope"
@@ -164,7 +164,7 @@ item element is registered as a Zope CA utility, so the values to
 meaning when used as they would if you had used the ``zope:utility``
 directive to register a named utility.
 
-.. code-block::
+.. code-block:: xml
    :linenos:
 
     <configure xmlns="http://namespaces.zope.org/zope"
@@ -195,7 +195,7 @@ As with the ``zope:utility`` directive, instead of using the
 ``factory`` attribute, the ``component`` attribute may be used if the
 utility is already constructed.
 
-.. code-block::
+.. code-block:: xml
    :linenos:
 
     <lemonade:listitem
@@ -252,7 +252,7 @@ interface in a ``lemonade:listitem`` directive using the
 ``get_listitems`` API.  A sequence of dictionaries is returned in
 ascending ``sort_key`` order.
 
-.. code-block::
+.. code-block:: python
    :linenos:
 
    >>> from repoze.lemonade.listitem import get_listitems
