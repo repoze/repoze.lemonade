@@ -1,3 +1,8 @@
+Next release
+
+ Make changes that allow us not to require "zope.security" (and its
+ dependencies).
+
 0.7.1 (2008/12/12)
 
  Speed up ``get_content_type`` and ``get_content_types`` by using a

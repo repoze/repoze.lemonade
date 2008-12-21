@@ -34,7 +34,7 @@ class TestContentDirective(unittest.TestCase):
         context = DummyContext()
 
         from zope.component.interface import provideInterface
-        from zope.component.zcml import handler
+        from repoze.lemonade.zcml import handler
 
         self._callFUT(context, Foo, IFoo)
 
@@ -93,7 +93,7 @@ class TestListitemDirective(unittest.TestCase):
 
     def test_component(self):
         from zope.interface import Interface
-        from zope.component.zcml import handler
+        from repoze.lemonade.zcml import handler
         class IDummy(Interface):
             pass
         component = lambda *x: 'foo'
@@ -117,7 +117,7 @@ class TestListitemDirective(unittest.TestCase):
 
     def test_factory(self):
         from zope.interface import Interface
-        from zope.component.zcml import handler
+        from repoze.lemonade.zcml import handler
         class IDummy(Interface):
             pass
         factory = lambda *x: 'foo'

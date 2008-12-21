@@ -3,17 +3,22 @@ from zope.interface.interfaces import IInterface
 from zope.interface import providedBy
 
 from zope.component.interface import provideInterface
+from zope.component import getSiteManager
 
 from zope.configuration.exceptions import ConfigurationError
 from zope.configuration.fields import GlobalObject
 from zope.configuration.fields import GlobalInterface
-from zope.component.zcml import handler
 
 from zope.schema import TextLine
 
 from repoze.lemonade.interfaces import IContentType
 from repoze.lemonade.interfaces import IContentFactory
 from repoze.lemonade.interfaces import IContent
+
+def handler(methodName, *args, **kwargs):
+    method = getattr(getSiteManager(), methodName)
+    method(*args, **kwargs)
+
 
 def addbase(iface1, iface2):
     if not iface2 in iface1.__iro__:

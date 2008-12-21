@@ -29,8 +29,8 @@ requires = [
     'setuptools',
     'zope.component',
     'zope.interface',
-    'zope.security',
     'zope.configuration',
+    'nose'
     ]
 
 _DESC = """ repoze.lemonade is a collection of utilties that make it possible
@@ -61,7 +61,7 @@ setup(name='repoze.lemonade',
       zip_safe=False,
       tests_require = requires,
       install_requires = requires,
-      test_suite="repoze.lemonade",
+      test_suite="nose.collector",
       entry_points = """\
       """
       )
