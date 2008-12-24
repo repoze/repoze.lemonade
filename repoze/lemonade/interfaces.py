@@ -1,8 +1,4 @@
 from zope.interface import Interface
-from zope.interface.interfaces import IInterface
-
-class IContentType(IInterface):
-    """ Interface meta-type representing a content type """
 
 class IContentFactory(Interface):
     """ Content factory """
@@ -17,5 +13,6 @@ class IContent(Interface):
 class IContentTypeCache(Interface):
     """ Marker interface used internally by get_content_types as the
     type used for a utility registration that acts as a content type
-    cache """
+    cache.  The cache implements the interface provided by Python
+    ``set`` objects."""
     

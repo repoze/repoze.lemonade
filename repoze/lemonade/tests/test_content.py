@@ -15,13 +15,9 @@ class TestContent(unittest.TestCase):
         from repoze.lemonade.tests.fixtureapp.content import Foo
         from repoze.lemonade.tests.fixtureapp.content import IBar
         from repoze.lemonade.tests.fixtureapp.content import Bar
-        from zope.component.interface import provideInterface
-        from repoze.lemonade.interfaces import IContentType
         from repoze.lemonade.interfaces import IContentFactory
         from repoze.lemonade.zcml import HammerFactoryFactory
-        provideInterface('', IFoo, IContentType)
         gsm.registerAdapter(HammerFactoryFactory(Foo), (IFoo,), IContentFactory)
-        provideInterface('', IBar, IContentType)
         gsm.registerAdapter(HammerFactoryFactory(Bar), (IBar,), IContentFactory)
 
     def test_create_content(self):

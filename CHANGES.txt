@@ -1,5 +1,9 @@
 Next release
 
+ Disuse the ``IContentType`` IInterface.  This feature requires
+ ``provideInterface``, which uses the global ZCML registry.  We are
+ able to mark our content interfaces using ``IContent`` instead.
+
  Added Sphinx docs.
 
 0.7.2 (2008/12/21)

@@ -24,7 +24,6 @@ class TestContentDirective(unittest.TestCase):
 
         from zope.interface import Interface
         from repoze.lemonade.interfaces import IContent
-        from repoze.lemonade.interfaces import IContentType
         from repoze.lemonade.interfaces import IContentFactory
         from repoze.lemonade.zcml import addbase
 
@@ -33,25 +32,19 @@ class TestContentDirective(unittest.TestCase):
 
         context = DummyContext()
 
-        from zope.component.interface import provideInterface
         from repoze.lemonade.zcml import handler
 
         self._callFUT(context, Foo, IFoo)
 
-        self.assertEqual(len(context.actions), 3)
-        provide = context.actions[0]
-        self.assertEqual(provide['discriminator'],
-                         ('content', IFoo, IContentType))
-        self.assertEqual(provide['callable'], provideInterface)
-        self.assertEqual(provide['args'], ('', IFoo, IContentType))
+        self.assertEqual(len(context.actions), 2)
 
-        provide = context.actions[1]
+        provide = context.actions[0]
         self.assertEqual(provide['discriminator'],
                          ('content', IFoo, IContent))
         self.assertEqual(provide['callable'], addbase)
         self.assertEqual(provide['args'], (IFoo, IContent))
 
-        register = context.actions[2]
+        register = context.actions[1]
         self.assertEqual(register['discriminator'],
                          ('content', Foo, IFoo, IContentFactory))
         self.assertEqual(register['callable'], handler)

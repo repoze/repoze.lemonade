@@ -2,7 +2,6 @@ from zope.interface import Interface
 from zope.interface.interfaces import IInterface
 from zope.interface import providedBy
 
-from zope.component.interface import provideInterface
 from zope.component import getSiteManager
 
 from zope.configuration.exceptions import ConfigurationError
@@ -11,7 +10,6 @@ from zope.configuration.fields import GlobalInterface
 
 from zope.schema import TextLine
 
-from repoze.lemonade.interfaces import IContentType
 from repoze.lemonade.interfaces import IContentFactory
 from repoze.lemonade.interfaces import IContent
 
@@ -50,12 +48,6 @@ def content(_context, factory, type):
             'The provided "type" argument (%r) is not an '
             'interface object (it does not inherit from '
             'zope.interface.Interface' % type)
-
-    _context.action(
-        discriminator = ('content', type, IContentType),
-        callable = provideInterface,
-        args = ('', type, IContentType)
-        )
 
     _context.action(
         discriminator = ('content', type, IContent),
