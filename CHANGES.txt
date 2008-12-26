@@ -1,4 +1,4 @@
-Next release
+0.7.3 (2008/12/28)
 
  Disuse the ``IContentType`` IInterface.  This feature requires
  ``provideInterface``, which uses the global ZCML registry.  We are
