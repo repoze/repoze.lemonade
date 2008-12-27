@@ -30,6 +30,7 @@ requires = [
     'zope.component',
     'zope.interface',
     'zope.configuration',
+    'zope.testing',
     'nose'
     ]
 
