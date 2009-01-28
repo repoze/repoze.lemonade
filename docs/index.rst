@@ -289,6 +289,7 @@ module which make writing tests for lemonade content slightly easier.
 
   .. autofunction:: registerContentFactory
 
+  .. autofunction:: registerListItem
 
 Indices and tables
 ------------------

@@ -32,3 +32,31 @@ def registerContentFactory(factory, iface):
     sm.registerAdapter(lambda *arg: factory, (iface,), IContentFactory)
     
     
+def registerListItem(provides, component, name, title=None,
+                     description=None, sort_key=0):
+    """ Register a lemonade 'list item'.  A list item is a utility
+    registered for the ``provides`` interface and the ``name`` name,
+    using the ``component`` as the utility implementation.  It
+    includes the the name, the title, the description, and the
+    sort_key as metadata in the component registry for later
+    consumption by ``repoze.lemonade.listitem.get_listitems``.  You
+    will want to use this testing API when you need to emulate the
+    result of some ``lemonade:listitem`` ZCML registration.  For example::
+
+      from zope.interface import Interface
+      class IFoo(Interface):
+          pass
+      def foo_one():
+          pass
+      from repoze.lemonade.testing import registerListItem
+      registerListItem(IFoo, foo_one, 'foo_one')
+
+      from repoze.lemonade.listitem import get_listitems
+      items = get_listitems(IFoo)
+      self.assertEqua(len(items), 1)
+      self.assertEqual(items[0]['name'], 'foo_one')
+      self.assertEqual(items[0]['component'], foo_one)
+    """
+    sm = getSiteManager()
+    info = {'title':title, 'description':description, 'sort_key':sort_key}
+    sm.registerUtility(component, provides, name, info)
