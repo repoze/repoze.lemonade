@@ -1,75 +1,86 @@
 Next release
+------------
 
- Readd missing ``zope.testing`` dependency.
+- Readd missing ``zope.testing`` dependency.
 
- Add ``testing`` module.
+- Add ``testing`` module.
 
- Add ``registerContentFactory`` API to testing module.
+- Add ``registerContentFactory`` API to testing module.
 
- ADd ``registerListItem`` API to testing module.
+- Add ``registerListItem`` API to testing module.
 
 0.7.3 (2008/12/28)
+------------------
 
- Disuse the ``IContentType`` IInterface.  This feature requires
- ``provideInterface``, which uses the global ZCML registry.  We are
- able to mark our content interfaces using ``IContent`` instead.
+- Disuse the ``IContentType`` IInterface.  This feature requires
+  ``provideInterface``, which uses the global ZCML registry.  We are
+  able to mark our content interfaces using ``IContent`` instead.
 
- Added Sphinx docs.
+- Added Sphinx docs.
 
 0.7.2 (2008/12/21)
+------------------
 
- Make changes that allow us not to require "zope.security" (and its
- dependencies).
+- Make changes that allow us not to require "zope.security" (and its
+  dependencies).
 
 0.7.1 (2008/12/12)
+------------------
 
- Speed up ``get_content_type`` and ``get_content_types`` by using a
- content type cache rather than rooting through the adapter registry
- every time we need to call them.  To invalidate the cache, do
- ``sitemanager.unregisterUtility(IContentTypeCache)``.
+- Speed up ``get_content_type`` and ``get_content_types`` by using a
+  content type cache rather than rooting through the adapter registry
+  every time we need to call them.  To invalidate the cache, do
+  ``sitemanager.unregisterUtility(IContentTypeCache)``.
 
 0.7 (2008/12/10)
+----------------
 
- Add ``lemonade:listitem`` directive and ``get_listitems`` API.
+- Add ``lemonade:listitem`` directive and ``get_listitems`` API.
 
 0.6 (2008/12/2)
+---------------
 
- Use ``zope.component.getSiteManager`` instead of
- ``zope.component.getGlobalSiteManager`` to find an adapter registry.
- This helps bfg inasmuch as it will use the bfg registry rather than
- the base registry when getSiteManager has been hooked; it will fall
- back to getting the global site manager if it has not been hooked.
+- Use ``zope.component.getSiteManager`` instead of
+  ``zope.component.getGlobalSiteManager`` to find an adapter registry.
+  This helps bfg inasmuch as it will use the bfg registry rather than
+  the base registry when getSiteManager has been hooked; it will fall
+  back to getting the global site manager if it has not been hooked.
 
 0.5 (2008/12/2)
+---------------
 
- Add ``IContent`` interface.  When an ``IFoo`` interface is declared via
- ZCML as ``lemonade:content``, add the ``IContent`` interface to the
- ``__bases__`` of the ``IFoo`` interface when the ZCML executes.
+- Add ``IContent`` interface.  When an ``IFoo`` interface is declared
+  via ZCML as ``lemonade:content``, add the ``IContent`` interface to
+  the ``__bases__`` of the ``IFoo`` interface when the ZCML executes.
 
- Change how ``is_content`` works: use IContent.providedBy(object)
- instead of scanning the application registry for factories.
+- Change how ``is_content`` works: use IContent.providedBy(object)
+  instead of scanning the application registry for factories.
 
 0.4 (unknown)
+-------------
 
- Add ``is_content`` and ``get_content_type`` APIs to content module.
+- Add ``is_content`` and ``get_content_type`` APIs to content module.
 
 0.3 (2008/10/11)
+----------------
 
- Evolution machinery moved to ``repoze.evolution``.
+- Evolution machinery moved to ``repoze.evolution``.
 
- Workflow machinery moved to ``repoze.workflow``.
+- Workflow machinery moved to ``repoze.workflow``.
 
- Folder machinery moved to ``repoze.folder``.
+- Folder machinery moved to ``repoze.folder``.
 
- (Remaining: content registrations)
+- (Remaining: content registrations)
 
 0.2 (2008/10/05)
+----------------
 
-  Added ``evolution`` module; useful to evolve ZODB and other
+- Added ``evolution`` module; useful to evolve ZODB and other
   persistent data structures in lockstep with code changes.  Needs
   documentation.
 
 0.1
+---
 
-  Initial release.
+- Initial release.
 

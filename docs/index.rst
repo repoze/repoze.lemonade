@@ -291,6 +291,14 @@ module which make writing tests for lemonade content slightly easier.
 
   .. autofunction:: registerListItem
 
+:mod:`repoze.lemonade` Changes
+------------------------------
+
+.. toctree::
+   :maxdepth: 2
+
+   changes
+
 Indices and tables
 ------------------
 
