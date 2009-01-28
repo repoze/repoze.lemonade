@@ -279,6 +279,17 @@ listitem.  The value returned will be the instance of a utility
 implied by ``factory`` or ``component`` (or ``None`` if neither was
 mentioned in the listitem registration).
 
+Testing API
+-----------
+
+There are utility functions in the :mod:`repoze.lemonade.testing`
+module which make writing tests for lemonade content slightly easier.
+
+.. automodule:: repoze.lemonade.testing
+
+  .. autofunction:: registerContentFactory
+
+
 Indices and tables
 ------------------
 

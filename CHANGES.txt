@@ -2,6 +2,10 @@ Next release
 
  Readd missing ``zope.testing`` dependency.
 
+ Add ``testing`` module.
+
+ Add ``registerContentFactory`` API to testing module.
+
 0.7.3 (2008/12/28)
 
  Disuse the ``IContentType`` IInterface.  This feature requires
