@@ -1,6 +1,7 @@
 from zope.component import getSiteManager
 from zope.component import getAdapter
 from zope.interface import directlyProvides
+from zope.interface import providedBy
 
 from repoze.lemonade.interfaces import IContentFactory
 from repoze.lemonade.interfaces import IContent
@@ -36,14 +37,10 @@ def get_content_types(context=_marker):
                 iface = reg.required[0]
                 cache.add(iface)
 
-    types = []
-    for iface in cache:
-        if context is _marker:
-            types.append(iface)
-        elif iface.providedBy(context):
-            types.append(iface)
-    return types
-        
+    if context is _marker:
+        return list(cache)
+    return [iface for iface in providedBy(context) if iface in cache]
+ 
 def get_content_type(context):
     types = get_content_types(context)
     if len(types) > 1:
