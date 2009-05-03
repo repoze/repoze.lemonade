@@ -1,5 +1,5 @@
-After 0.7.4
------------
+0.7.5 (2009/05/02)
+------------------
 
 - Speed up 'get_content_type' further by starting from context's interfaces
   (normally a much smaller set than all content types).
