@@ -84,6 +84,12 @@ class TestContent(unittest.TestCase):
         type = get_content_type(fred)
         self.assertEqual(type, content.IBar)
 
+    def test_get_content_type_has_more_than_one_type(self):
+        from repoze.lemonade.content import _marker
+        self._setupContentTypes()
+        from repoze.lemonade.content import get_content_type
+        self.assertRaises(ValueError, get_content_type, _marker)
+
     def test_get_content_type_withcontent_multipletypes(self):
         self._setupContentTypes()
         from repoze.lemonade.tests.fixtureapp import content

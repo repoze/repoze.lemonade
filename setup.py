@@ -62,7 +62,7 @@ setup(name='repoze.lemonade',
       zip_safe=False,
       tests_require = requires,
       install_requires = requires,
-      test_suite="nose.collector",
+      test_suite="repoze.lemonade",
       entry_points = """\
       """
       )

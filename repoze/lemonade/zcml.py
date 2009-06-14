@@ -124,7 +124,7 @@ def listitem(_context, provides=None, component=None, factory=None, name=None,
         component = factory()
 
     if name is None:
-        raise TypeError('name must not be specified')
+        raise TypeError('name must be specified')
 
     if provides is None:
         provides = list(providedBy(component))

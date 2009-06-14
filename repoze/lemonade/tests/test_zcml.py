@@ -68,21 +68,45 @@ class TestListitemDirective(unittest.TestCase):
 
     def test_spec_both_factory_and_component(self):
         context = DummyContext()
-        self.assertRaises(TypeError, self._callFUT, factory='abc',
-                          component='abc', name='foo')
+        self.assertRaises(TypeError, self._callFUT, context, component='abc',
+                          factory='abc', name='foo')
     
     def test_missing_provides_attribute(self):
         context = DummyContext()
-        self.assertRaises(TypeError, self._callFUT, component='abc', name='foo')
+        self.assertRaises(TypeError, self._callFUT, context,
+                          component='abc', name='foo')
 
     def test_missing_name_attribute(self):
         from zope.interface import Interface
         class IDummy(Interface):
             pass
         context = DummyContext()
-        self.assertRaises(TypeError, self._callFUT, component='abc',
+        self.assertRaises(TypeError, self._callFUT, context, component='abc',
                           provides=IDummy)
 
+    def test_via_provides(self):
+        from zope.interface import Interface
+        from zope.interface import implements
+        class IDummy(Interface):
+            pass
+        class Dummy:
+            implements(IDummy)
+        dummy = Dummy()
+        context = DummyContext()
+        self._callFUT(context, component=dummy, name='abc')
+        self.assertEqual(len(context.actions), 1)
+
+    def test_bad_sort_key(self):
+        from zope.interface import Interface
+        class IDummy(Interface):
+            pass
+        class Dummy:
+            pass
+        dummy = Dummy()
+        context = DummyContext()
+        self._callFUT(context, component=dummy, name='abc', provides=IDummy,
+                      sort_key='murg')
+        self.assertEqual(len(context.actions), 1)
 
     def test_component(self):
         from zope.interface import Interface
