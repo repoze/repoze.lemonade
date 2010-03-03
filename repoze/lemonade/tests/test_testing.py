@@ -53,8 +53,7 @@ class TestRegisterContentFactory(unittest.TestCase):
         class IFoo(Interface):
             pass
         class Foo:
-            def __init__(self, arg):
-                self.arg = arg
+            def __init__(self, arg): self.arg = arg
         registerContentFactory(Foo, IFoo)
         self.assertEqual(get_content_types(), [IFoo])
         

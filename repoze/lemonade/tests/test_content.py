@@ -68,7 +68,7 @@ class TestContent(unittest.TestCase):
         class Fred:
             implements(content.IBar)
         fred = Fred()
-        types = get_content_types(fred)
+        get_content_types(fred)
         sm = getSiteManager()
         cache = sm.getUtility(IContentTypeCache)
         self.failUnless(content.IBar in cache)

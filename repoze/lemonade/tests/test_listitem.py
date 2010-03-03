@@ -47,5 +47,4 @@ from zope.interface import Interface
 class IFoo(Interface):
     pass
 
-def component():
-    pass
+def component(): pass

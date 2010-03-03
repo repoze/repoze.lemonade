@@ -9,9 +9,7 @@ class IFoo(Interface):
     pass
 
 class Bar:
-    def __init__(self, *arg, **kw):
-        self.arg = arg
-        self.kw = kw
+    def __init__(self, *arg, **kw): pass
 
 class IBar(Interface):
     pass
@@ -19,6 +17,5 @@ class IBar(Interface):
 class IListItem(Interface):
     pass
 
-def listitemcomponent():
-    pass
+def listitemcomponent(): pass
 

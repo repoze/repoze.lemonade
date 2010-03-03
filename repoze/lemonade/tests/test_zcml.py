@@ -19,8 +19,7 @@ class TestContentDirective(unittest.TestCase):
 
     def test_it(self):
         class Foo:
-            def __init__(self, **kw):
-                self.kw = kw
+            def __init__(self, **kw): self.kw = kw
 
         from zope.interface import Interface
         from repoze.lemonade.interfaces import IContent
