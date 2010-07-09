@@ -4,18 +4,25 @@ from repoze.lemonade.interfaces import IContentFactory
 
 def registerContentFactory(factory, iface):
     """ Registers a lemonade ``IContentFactory`` (so it can be later
-    looked up by ``create_content`` or ``get_content_types``).  The
-    first argument, ``factory`` is the factory which will create the
-    content (usually the content class itself), the second argument is
-    the content interface (e.g. ``IFoo`` *not*
-    ``repoze.lemonade.interfaces.IContent``).  If the content
-    interface is later used via ``create_content``, the factory will
-    be used to create the content.  Here's a sample test registration
-    and usage (the body of a ``unittest.TestCase`` method)::
+    looked up by ``create_content`` ``get_content_type``, or
+    ``get_content_types``).  The first argument, ``factory`` is the
+    factory which will create the content (usually the content class
+    itself), the second argument is the content interface
+    (e.g. ``IFoo`` *not* ``repoze.lemonade.interfaces.IContent``).
+
+    Here's a sample test registration and usage (the body of a
+    ``unittest.TestCase`` method) which demonstrates that if a content
+    interface is later used by ``create_content``, the factory will be
+    used to create the content and if a piece of content is used by
+    ``get_content_type``, the factory will be used to locate the
+    type interface::
 
       from repoze.lemonade.testing import registerContentFactory
       from repoze.lemonade.content import create_content
+      from repoze.lemonade.content import get_content_type
+
       from zope.interface import Interface
+
       class IFoo(Interface):
           pass
       
@@ -27,6 +34,9 @@ def registerContentFactory(factory, iface):
       newfoo = create_content(IFoo, 1)
       self.failUnless(newfoo.__class__ is Foo)
       self.assertEqual(newfoo.arg, 1)
+      ct = get_content_type(newfoo)
+      self.assertEqual(ct, IFoo)
+    
     """
     sm = getSiteManager()
     sm.registerAdapter(lambda *arg: factory, (iface,), IContentFactory)
