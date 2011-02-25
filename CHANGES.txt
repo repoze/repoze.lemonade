@@ -3,6 +3,8 @@ Next release
 
 - 100% test coverage.
 
+- Moved to GitHub.
+
 0.7.5 (2009/05/02)
 ------------------
 
