@@ -31,9 +31,13 @@ requires = [
     'zope.component',
     'zope.interface',
     'zope.configuration',
-    'zope.testing',
-    'nose'
     ]
+
+tests_require = requires + [
+    'zope.testing',
+    ]
+
+testing_extras = ['nose', 'coverage']
 
 _DESC = """ repoze.lemonade is a collection of utilties that make it possible
 to create Zope CMF-like applications without requiring any particular
@@ -61,10 +65,13 @@ setup(name='repoze.lemonade',
       include_package_data=True,
       namespace_packages=['repoze', 'repoze.lemonade'],
       zip_safe=False,
-      tests_require = requires,
+      tests_require = tests_require,
       install_requires = requires,
       test_suite="repoze.lemonade",
       entry_points = """\
-      """
-      )
+      """,
+      extras_require = {
+        'testing':  tests_require + testing_extras,
+      }
+)
 
