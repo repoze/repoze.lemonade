@@ -15,6 +15,7 @@
 __version__ = '0.7.5'
 
 import os
+import sys
 
 from setuptools import setup, find_packages
 
@@ -26,16 +27,29 @@ except:
     README = ''
     CHANGES = ''
 
-requires = [
-    'setuptools',
-    'zope.component',
-    'zope.interface',
-    'zope.configuration',
-    ]
+if sys.version_info >= (2, 6): #pragma NO COVER Python >= 2.6
+    requires = [
+        'setuptools',
+        'zope.component',
+        'zope.configuration',
+        'zope.interface',
+        ]
 
-tests_require = requires + [
-    'zope.testing',
-    ]
+    tests_require = requires + [
+        'zope.testing',
+        ]
+else: #pragma NO COVER Python < 2.6
+    requires = [
+        'setuptools',
+        'zope.schema<4.0dev',
+        'zope.component<3.11dev',
+        'zope.configuration<3.7dev',
+        'zope.interface<3.8dev',
+        ]
+
+    tests_require = requires + [
+        'zope.testing<4.1dev',
+        ]
 
 testing_extras = ['nose', 'coverage']
 
